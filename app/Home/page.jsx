@@ -29,7 +29,7 @@ const Home = () => {
         }
     ];
 
-    // Section 2: Popular Courses
+    // Section 2: Popular Courses - WITH IMAGES
     const popularCourses = [
         {
             id: 1,
@@ -38,7 +38,8 @@ const Home = () => {
             price: 59.99,
             rating: 4.8,
             students: 2340,
-            category: "Development"
+            category: "Development",
+            image: "https://i.ibb.co/SwdVv91V/web-development.jpg" // Your first image link
         },
         {
             id: 2,
@@ -47,7 +48,8 @@ const Home = () => {
             price: 49.99,
             rating: 4.7,
             students: 1870,
-            category: "Mobile"
+            category: "Mobile",
+            image: "https://i.ibb.co/mCQNKVdh/mobile-app.jpg" // Your second image link
         },
         {
             id: 3,
@@ -56,7 +58,8 @@ const Home = () => {
             price: 69.99,
             rating: 4.9,
             students: 1560,
-            category: "Data Science"
+            category: "Data Science",
+            image: "https://i.ibb.co/S7mSjZPY/data-science.jpg" // Your third image link
         },
         {
             id: 4,
@@ -65,7 +68,8 @@ const Home = () => {
             price: 44.99,
             rating: 4.6,
             students: 2100,
-            category: "Design"
+            category: "Design",
+            image: "https://i.ibb.co/DxrF5Cq/ui-ux-design.jpg" // Your fourth image link
         }
     ];
 
@@ -163,7 +167,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Section 2: Popular Courses */}
+            {/* Section 2: Popular Courses WITH IMAGES */}
             <section className="py-20 px-6 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
@@ -176,8 +180,28 @@ const Home = () => {
                                 key={course.id}
                                 className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-2xl transition-all duration-500 cursor-pointer group hover:scale-105"
                             >
-                                <div className="h-48 bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-500"></div>
+                                {/* Course Image */}
+                                <div className="h-48 relative overflow-hidden">
+                                    <img 
+                                        src={course.image} 
+                                        alt={course.title}
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        onError={(e) => {
+                                            // Fallback gradient if image fails to load
+                                            e.target.style.background = `linear-gradient(135deg, ${getCategoryColor(course.category)})`;
+                                            e.target.style.display = 'none';
+                                            e.target.nextSibling.style.display = 'block';
+                                        }}
+                                    />
+                                    {/* Fallback gradient background */}
+                                    <div 
+                                        className="absolute inset-0 hidden"
+                                        style={{ background: `linear-gradient(135deg, ${getCategoryColor(course.category)})` }}
+                                    >
+                                        <div className="absolute inset-0 flex items-center justify-center text-white text-4xl">
+                                            {getCategoryIcon(course.category)}
+                                        </div>
+                                    </div>
                                     <div className="absolute top-4 left-4">
                                         <span className="bg-white text-gray-900 px-3 py-1 rounded-full text-sm font-semibold">
                                             {course.category}
@@ -269,6 +293,28 @@ const Home = () => {
             </section>
         </div>
     );
+};
+
+// Helper function for category colors
+const getCategoryColor = (category) => {
+    const colors = {
+        'Development': '#3B82F6, #1D4ED8',
+        'Mobile': '#10B981, #047857',
+        'Data Science': '#8B5CF6, #7C3AED',
+        'Design': '#F59E0B, #D97706'
+    };
+    return colors[category] || '#6B7280, #4B5563';
+};
+
+// Helper function for category icons
+const getCategoryIcon = (category) => {
+    const icons = {
+        'Development': '💻',
+        'Mobile': '📱',
+        'Data Science': '📊',
+        'Design': '🎨'
+    };
+    return icons[category] || '📚';
 };
 
 export default Home;

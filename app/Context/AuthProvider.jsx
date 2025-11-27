@@ -41,6 +41,8 @@ export const AuthProvider = ({ children }) => {
 
   const userSignOut = () => signOut(auth);
 
+  
+
   const authinfo = {
     registeruser,
     loginuser,

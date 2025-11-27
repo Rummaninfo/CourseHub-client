@@ -10,7 +10,9 @@ const Nav = () => {
   const router = useRouter();
   let { user, userSignOut } = useContext(AuthContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const mobileMenuRef = useRef(null);
 
   let logoutuser = () => {
     userSignOut()
@@ -35,17 +37,31 @@ const Nav = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
+      }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
     };
   }, []);
 
-  const toggleDropdown = () => {
+  const toggleDropdown = (e) => {
+    e?.stopPropagation();
     setDropdownOpen(!dropdownOpen);
   };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  // Check if user is properly authenticated
+  const isUserAuthenticated = user && (user.uid || user.email);
 
   return (
     <header className="sticky top-0 z-50 border-b shadow-lg bg-gradient-to-r from-white to-gray-50 backdrop-blur-lg bg-white/95">
@@ -70,13 +86,6 @@ const Nav = () => {
             <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
           </Link>
           <Link 
-            href="/Profile" 
-            className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300 relative group"
-          >
-            Profile
-            <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
-          </Link>
-          <Link 
             href="/Courses" 
             className="text-gray-700 hover:text-blue-600 font-medium transition-colors duration-300 relative group"
           >
@@ -85,7 +94,8 @@ const Nav = () => {
           </Link>
         </div>
 
-        {user ? (
+        {/* Right side - User profile OR Login/Register buttons */}
+        {isUserAuthenticated ? (
           <div className="flex gap-4 items-center relative" ref={dropdownRef}>
             {/* Profile Picture with Dropdown */}
             <div
@@ -94,9 +104,12 @@ const Nav = () => {
             >
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent group-hover:border-blue-500 transition-all duration-300 shadow-md">
                 <img
-                  src={user?.photoURL}
+                  src={user?.photoURL || "/default-avatar.png"}
                   alt="profile"
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNENTVENUQiLz4KPHBhdGggZD0iTTIwIDIyQzIzLjMxMzcgMjIgMjYgMTkuMzEzNyAyNiAxNkMyNiAxMi42ODYzIDIzLjMxMzcgMTAgMjAgMTBDMTYuNjg2MyAxMCAxNCAxMi42ODYzIDE0IDE2QzE0IDE5LjMxMzcgMTYuNjg2MyAyMiAyMCAyMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0yMCAyNkMxNC40NzcyIDI2IDEwIDMwLjQ3NzIgMTAgMzZIMzBDMzAgMzAuNDc3MiAyNS41MjI4IDI2IDIwIDI2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+";
+                  }}
                 />
               </div>
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
@@ -104,14 +117,14 @@ const Nav = () => {
 
             {/* Dropdown Menu */}
             {dropdownOpen && (
-              <div className="absolute top-16 right-0 bg-white rounded-2xl shadow-2xl border border-gray-200 py-3 min-w-64 z-50 fade-in">
+              <div className="absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 py-3 min-w-64 z-50">
                 {/* User Info */}
                 <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50 rounded-t-2xl">
                   <p className="text-lg font-bold text-gray-900">
-                    {user?.displayName || "Welcome Back!"}
+                    {user?.displayName || "User"}
                   </p>
                   <p className="text-sm text-gray-600 truncate mt-1">
-                    {user?.email}
+                    {user?.email || "Welcome!"}
                   </p>
                 </div>
 
@@ -168,20 +181,11 @@ const Nav = () => {
                 </div>
               </div>
             )}
-
-            {/* Desktop Logout Button */}
-            <button
-              onClick={logoutuser}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all duration-300 font-medium"
-            >
-              <span>🚪</span>
-              Logout
-            </button>
           </div>
         ) : (
           <div className="hidden md:flex items-center gap-4">
             <Link
-              href="/login"
+              href="/Login"
               className="px-6 py-2.5 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 font-medium"
             >
               Login
@@ -195,17 +199,90 @@ const Nav = () => {
           </div>
         )}
 
-        {/* Mobile Menu Icon */}
-        <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-          <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
-        </button>
+        {/* Mobile Menu Icon and Menu */}
+        <div className="md:hidden flex items-center gap-2" ref={mobileMenuRef}>
+          {/* Show login button on mobile when not authenticated */}
+          {!isUserAuthenticated && (
+            <Link
+              href="/Login"
+              className="px-4 py-2 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-all duration-300 font-medium text-sm"
+            >
+              Login
+            </Link>
+          )}
+
+          {/* Mobile Menu Button */}
+          <button 
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            onClick={toggleMobileMenu}
+          >
+            <svg className="w-7 h-7 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          </button>
+
+          {/* Mobile Menu Dropdown - ONLY HOME AND ALL COURSES */}
+          {mobileMenuOpen && (
+            <div className="absolute top-16 right-4 left-4 bg-white rounded-2xl shadow-2xl border border-gray-200 py-4 z-50">
+              {/* Mobile Menu Items - Only Home and All Courses */}
+              <div className="space-y-1">
+                <Link
+                  href="/Home"
+                  className="flex items-center gap-3 px-5 py-4 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <div className="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center">
+                    🏠
+                  </div>
+                  <span className="font-medium">Home</span>
+                </Link>
+
+                <Link
+                  href="/Courses"
+                  className="flex items-center gap-3 px-5 py-4 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                    📚
+                  </div>
+                  <span className="font-medium">All Courses</span>
+                </Link>
+
+                {/* Show login/register for non-authenticated users */}
+                {!isUserAuthenticated && (
+                  <>
+                    <Link
+                      href="/Login"
+                      className="flex items-center gap-3 px-5 py-4 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 group"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-6 h-6 bg-purple-100 rounded-lg flex items-center justify-center">
+                        🔑
+                      </div>
+                      <span className="font-medium">Login</span>
+                    </Link>
+
+                    <Link
+                      href="/Register"
+                      className="flex items-center gap-3 px-5 py-4 text-gray-700 hover:bg-green-50 hover:text-green-600 transition-all duration-200 group"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <div className="w-6 h-6 bg-green-100 rounded-lg flex items-center justify-center">
+                        🚀
+                      </div>
+                      <span className="font-medium">Get Started</span>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </nav>
     </header>
   );

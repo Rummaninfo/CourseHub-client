@@ -47,9 +47,10 @@ const Courses = () => {
           <input
             value={searching}
             onChange={handlesearch}
+        
             type="text"
             placeholder="Search courses..."
-            className="w-full max-w-md px-4 py-2 border rounded-lg shadow-sm 
+            className="w-full max-w-md px-4 py-2 text-black border rounded-lg shadow-sm 
                focus:outline-none focus:ring-2 focus:ring-indigo-500 
                focus:border-indigo-500 transition"
           />
