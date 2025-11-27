@@ -11,7 +11,7 @@ const Courses = () => {
     let mounted = true;
 
     axios
-      .get(`https://courses-mocha-five.vercel.app/allcourses?search=${encodeURIComponent(searching)}`)
+      .get(`http://localhost:5000/allcourses?search=${encodeURIComponent(searching)}`)
       .then((res) => {
       
         if (!mounted) return;

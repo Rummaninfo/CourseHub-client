@@ -42,7 +42,7 @@ export default function AddCourse() {
 
     try {
       const res = await axios.post(
-        "https://courses-mocha-five.vercel.app/allcourses",
+        "http://localhost:5000/allcourses",
         newData,
         { timeout: 10000 }
       );

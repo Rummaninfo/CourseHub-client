@@ -12,7 +12,7 @@ const DetailsPage = () => {
 
     useEffect(() => {
         if (id) {
-            axios.get(`https://courses-mocha-five.vercel.app/allcourses/${id}`)
+            axios.get(`http://localhost:5000/allcourses/${id}`)
                 .then(response => {
                     setCourse(response.data);
                     setLoading(false);

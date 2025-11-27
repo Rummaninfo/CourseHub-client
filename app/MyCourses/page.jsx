@@ -17,7 +17,7 @@ const MyCourses = () => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("https://courses-mocha-five.vercel.app/mycourses", {
+        const res = await axios.get("http://localhost:5000/mycourses", {
           params: { email: user.email },
         });
         const payload = res.data?.result ?? res.data;
@@ -52,7 +52,7 @@ const MyCourses = () => {
   // যদি ইউজার Yes চাপায়
   if (result.isConfirmed) {
     try {
-      await axios.delete(`https://courses-mocha-five.vercel.app/mycourses/${id}`);
+      await axios.delete(`http://localhost:5000/mycourses/${id}`);
 
       // UI থেকে item remove
       setMyData((prev) => prev.filter((c) => (c._id ?? c.id) !== id));
