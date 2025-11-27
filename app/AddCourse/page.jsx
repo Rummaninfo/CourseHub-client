@@ -4,38 +4,55 @@ import axios from "axios";
 import React, { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 
-// AddCourseFormDesign.jsx
-// Presentation-only Next.js / React component styled with Tailwind CSS.
-// Minimal interactivity: onSubmit handler present. Short description removed; image field accepts a URL (you will provide link).
-
 export default function AddCourse() {
-    let {user} = useContext(AuthContext)
-    console.log(user)
-  const addedCourse = (ev) => {
-    ev.preventDefault();
-    let price = ev.target.price.value;
-    let title = ev.target.title.value;
-    let author = ev.target.author.value;
-    let category = ev.target.category.value;
-    let img = ev.target.img.value;
-    let short_description = ev.target.short_description.value;
-    let long_description = ev.target.long_description.value;
-    let email = user.email
+  const { user, loading } = useContext(AuthContext);
 
-      let newData ={
-        title, img,  author_name: author, price, category, short_description , long_description, email
-      }
-      console.log(newData)
-      axios.post("http://localhost:5000/allcourses", newData)
-      .then((data)=>{
-        console.log(data)
-        alert('successfully added')
-      }
-     
-    )
-    .catch(error=>{
-        console.log(error)
-    })
+  const addedCourse = async (ev) => {
+    ev.preventDefault();
+
+    // যদি auth লোডিং চলছে বা user না থাকে, সাবমিট নিষ্ক্রিয় করুন
+    if (loading) {
+      alert("Please wait...");
+      return;
+    }
+    if (!user) {
+      alert("You must be logged in to add a course.");
+      return;
+    }
+
+    const price = ev.target.price.value;
+    const title = ev.target.title.value;
+    const author = ev.target.author.value;
+    const category = ev.target.category.value;
+    const img = ev.target.img.value;
+    const short_description = ev.target.short_description.value;
+    const long_description = ev.target.long_description.value;
+    const email = user?.email || "unknown@example.com";
+
+    const newData = {
+      title,
+      img,
+      author_name: author,
+      price,
+      category,
+      short_description,
+      long_description,
+      email,
+    };
+
+    try {
+      const res = await axios.post(
+        "https://courses-mocha-five.vercel.app/allcourses",
+        newData,
+        { timeout: 10000 }
+      );
+      console.log("Added course:", res.data);
+      alert("Successfully added");
+      ev.target.reset();
+    } catch (error) {
+      console.error("Add course failed:", error);
+      alert("Failed to add course. Check console for details.");
+    }
   };
 
   return (
@@ -65,7 +82,9 @@ export default function AddCourse() {
         </div>
 
         <form onSubmit={addedCourse} className="space-y-6">
+          {/* ... আপনার ফর্ম ফিল্ডগুলো একই থাকবে ... */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Course ID */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Course ID
@@ -77,6 +96,7 @@ export default function AddCourse() {
               />
             </div>
 
+            {/* Price */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Price (USD)
@@ -88,6 +108,7 @@ export default function AddCourse() {
               />
             </div>
 
+            {/* Title */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">
                 Title
@@ -99,6 +120,7 @@ export default function AddCourse() {
               />
             </div>
 
+            {/* Author */}
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Author
@@ -110,6 +132,7 @@ export default function AddCourse() {
               />
             </div>
 
+            {/* Date */}
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Date
@@ -121,6 +144,7 @@ export default function AddCourse() {
               />
             </div>
 
+            {/* Category */}
             <div>
               <label className="text-sm font-medium text-gray-700">
                 Category
@@ -136,6 +160,7 @@ export default function AddCourse() {
               </select>
             </div>
 
+            {/* Image */}
             <div className="md:col-span-2">
               <label className="text-sm font-medium text-gray-700">
                 Course Image (URL)
@@ -154,7 +179,17 @@ export default function AddCourse() {
                 </div>
               </div>
             </div>
-            <div className="md:col-span-2"> <label className="block text-sm font-medium text-gray-700"> Short description </label> <input name="short_description" placeholder="A short one-line summary of the course" className="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200" /> </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Short description
+              </label>
+              <input
+                name="short_description"
+                placeholder="A short one-line summary of the course"
+                className="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+              />
+            </div>
 
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700">

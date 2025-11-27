@@ -1,0 +1,61 @@
+[debug] [2025-11-27T02:55:45.310Z] ----------------------------------------------------------------------
+[debug] [2025-11-27T02:55:45.312Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ThinkPad\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js use --add
+[debug] [2025-11-27T02:55:45.313Z] CLI Version:   14.26.0
+[debug] [2025-11-27T02:55:45.313Z] Platform:      win32
+[debug] [2025-11-27T02:55:45.313Z] Node Version:  v22.19.0
+[debug] [2025-11-27T02:55:45.313Z] Time:          Thu Nov 27 2025 08:55:45 GMT+0600 (Bangladesh Standard Time)
+[debug] [2025-11-27T02:55:45.313Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-27T02:55:45.600Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-27T02:55:45.601Z] > authorizing via signed-in user (siamahmed166815@gmail.com)
+[debug] [2025-11-27T02:55:45.604Z] Checked if tokens are valid: false, expires at: 1764212648230
+[debug] [2025-11-27T02:55:45.605Z] Checked if tokens are valid: false, expires at: 1764212648230
+[debug] [2025-11-27T02:55:45.605Z] > refreshing access token with scopes: []
+[debug] [2025-11-27T02:55:45.608Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2025-11-27T02:55:45.608Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-27T02:55:45.965Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2025-11-27T02:55:45.965Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2025-11-27T02:55:45.983Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-11-27T02:55:47.003Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-11-27T02:55:47.003Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-27T02:56:31.557Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\ThinkPad\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:519:28)
+    at Interface.emit (node:domain:489:12)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+    at ReadStream.emit (node:events:531:35)
+    at ReadStream.emit (node:domain:489:12)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-11-27T02:57:08.573Z] ----------------------------------------------------------------------
+[debug] [2025-11-27T02:57:08.575Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ThinkPad\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js use --add
+[debug] [2025-11-27T02:57:08.576Z] CLI Version:   14.26.0
+[debug] [2025-11-27T02:57:08.576Z] Platform:      win32
+[debug] [2025-11-27T02:57:08.576Z] Node Version:  v22.19.0
+[debug] [2025-11-27T02:57:08.576Z] Time:          Thu Nov 27 2025 08:57:08 GMT+0600 (Bangladesh Standard Time)
+[debug] [2025-11-27T02:57:08.576Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-11-27T02:57:08.857Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-11-27T02:57:08.857Z] > authorizing via signed-in user (siamahmed166815@gmail.com)
+[debug] [2025-11-27T02:57:08.859Z] Checked if tokens are valid: true, expires at: 1764215744966
+[debug] [2025-11-27T02:57:08.859Z] Checked if tokens are valid: true, expires at: 1764215744966
+[debug] [2025-11-27T02:57:08.860Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2025-11-27T02:57:09.831Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2025-11-27T02:57:09.831Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[debug] [2025-11-27T03:34:33.349Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (C:\Users\ThinkPad\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\@inquirer\core\dist\commonjs\lib\create-prompt.js:101:37)
+    at Interface.emit (node:events:519:28)
+    at Interface.emit (node:domain:489:12)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1132:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:271:20)
+    at ReadStream.emit (node:events:531:35)
+    at ReadStream.emit (node:domain:489:12)
+    at emitKeys (node:internal/readline/utils:370:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+[error] 
+[error] Error: An unexpected error has occurred.

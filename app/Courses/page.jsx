@@ -11,11 +11,9 @@ const Courses = () => {
     let mounted = true;
 
     axios
-      .get(`http://localhost:5000/allcourses?search=${encodeURIComponent(searching)}`)
+      .get(`https://courses-mocha-five.vercel.app/allcourses?search=${encodeURIComponent(searching)}`)
       .then((res) => {
-        // backend অনুযায়ী res.data থাকতে পারে — এখানে আমরা axios response কে ধরেছি
-        // যদি তোমার ব্যাকএন্ড res.send({ success: true, result }) করে থাকে,
-        // তাহলে setData(res.data.result) ব্যবহার করো।
+      
         if (!mounted) return;
         const payload = res.data?.result ?? res.data;
         setData(Array.isArray(payload) ? payload : []);
