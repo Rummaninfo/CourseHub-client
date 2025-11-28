@@ -1,13 +1,16 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { removeRequestMeta } from "next/dist/server/request-meta";
+import { updateProfile } from "firebase/auth";
 
 const Register = () => {
-  let { googleSignIn } = useContext(AuthContext);
+  let { googleSignIn, registeruser,  setUser } = useContext(AuthContext);
+  let [error, setError] = useState("");
   const router = useRouter();
 
   let gsingIN = () => {
@@ -26,6 +29,57 @@ const Register = () => {
         console.log(error);
       });
   };
+
+  let handleSubmit= (e)=>{
+   e.preventDefault()
+   let displayName = e.target.name.value 
+   let photoURL = e.target.img.value 
+   let email = e.target.email.value 
+   let password = e.target.password.value 
+  
+  const hasUppercase = /[A-Z]/.test(password);
+  setError("");
+  
+   
+  if(!hasUppercase){
+    return setError("Password must have at least one uppercase letter")
+  }
+   const hasLowercase = /[a-z]/.test(password);
+   if(!hasLowercase){
+    return setError("Password must have at least one lowercase letter")
+   }
+   if(password.length < 6 ){
+   return setError("Password must be at least 6 characters long")
+   }
+   registeruser(email, password)
+   .then((result)=>{
+    console.log(result.user)
+
+     updateProfile(result.user,  {
+        displayName ,
+          photoURL
+     })
+     .then(()=>{
+        setUser((prev)=>{
+           return {...prev, displayName, photoURL}
+        })
+     })
+      Swal.fire({
+          icon: "success",
+          title: "create Successful!",
+          text: "Welcome to LearnHub",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        router.push("/Home");
+
+     
+   })
+   .catch(error=>{
+    console.log(error)
+   })
+
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -49,7 +103,7 @@ const Register = () => {
           </div>
 
           {/* Register Form */}
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form  className="space-y-6" onSubmit={handleSubmit}>
             {/* Full Name Field */}
             <div>
               <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -59,6 +113,7 @@ const Register = () => {
                 <input
                   id="fullName"
                   type="text"
+                  name="name"
                   placeholder="Your full name"
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg"
                 />
@@ -77,6 +132,7 @@ const Register = () => {
                 <input
                   id="profileImage"
                   type="text"
+                  name="img"
                   placeholder="https://..."
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg"
                 />
@@ -95,6 +151,7 @@ const Register = () => {
                 <input
                   id="email"
                   type="email"
+                  name="email"
                   placeholder="you@example.com"
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg"
                 />
@@ -114,6 +171,7 @@ const Register = () => {
                   id="password"
                   type="password"
                   placeholder="Create a password"
+                  name="password"
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg pr-12"
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -121,6 +179,9 @@ const Register = () => {
                 </div>
               </div>
             </div>
+            {
+              error? <p className="text-red-500">{error}</p> :""
+            }
 
             {/* Register Button */}
             <button

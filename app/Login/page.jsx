@@ -12,58 +12,45 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const { userLogin, googleSignIn } = useContext(AuthContext);
+  const { loginuser, setUser ,  googleSignIn } = useContext(AuthContext);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!email || !password) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Please fill in all fields!",
-      });
-      return;
-    }
+    let email = e.target.email.value
+    let password = e.target.password.value
+    console.log(email, password)
+  
 
-    setLoading(true);
 
-    try {
-      await userLogin(email, password);
-      
-      Swal.fire({
+
+ 
+       
+      loginuser(email, password)
+      .then(result=>{
+       
+
+
+         Swal.fire({
         icon: "success",
         title: "Login Successful!",
         text: "Welcome back to LearnHub",
         timer: 2000,
         showConfirmButton: false,
+        
       });
+      router.push("/Home")
       
-      router.push("/Home");
-    } catch (error) {
-      console.error("Login error:", error);
+
+      })
+      .catch(err=>{
+
+
+     alert("failed")
+      })
       
-      let errorMessage = "Login failed. Please try again.";
-      
-      if (error.code === "auth/user-not-found") {
-        errorMessage = "No account found with this email.";
-      } else if (error.code === "auth/wrong-password") {
-        errorMessage = "Incorrect password. Please try again.";
-      } else if (error.code === "auth/invalid-email") {
-        errorMessage = "Invalid email address.";
-      } else if (error.code === "auth/too-many-requests") {
-        errorMessage = "Too many failed attempts. Please try again later.";
-      }
-      
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: errorMessage,
-      });
-    } finally {
-      setLoading(false);
-    }
+     
+ 
   };
 
   const handleGoogleLogin = async () => {
@@ -133,8 +120,9 @@ const Login = () => {
                 <input
                   id="email"
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+               
+                  
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg"
                   placeholder="Enter your email"
                   required
@@ -154,8 +142,8 @@ const Login = () => {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  
+                  name="password"
                   className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50 focus:bg-white text-gray-900 placeholder-gray-500 text-lg pr-12"
                   placeholder="Enter your password"
                   required
@@ -196,20 +184,15 @@ const Login = () => {
             {/* Login Button */}
             <button
               type="submit"
-              disabled={loading}
+              
+            
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-4 rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:hover:shadow-lg flex items-center justify-center gap-3"
             >
-              {loading ? (
-                <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Signing In...
-                </>
-              ) : (
-                <>
+ 
                   <span>🔑</span>
                   Sign In
-                </>
-              )}
+        
+           
             </button>
           </form>
 
