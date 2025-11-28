@@ -3,12 +3,21 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const MyCourses = () => {
   const { user } = useContext(AuthContext);
   const [mydata, setMyData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [deletingId, setDeletingId] = useState(null); // _id currently being deleted
+  const router = useRouter();
+
+ 
+  useEffect(() => {
+    if (user === null) {
+      router.replace("/Register");
+    }
+  }, [user, router]);
 
   // fetch courses
   useEffect(() => {
@@ -35,47 +44,61 @@ const MyCourses = () => {
 
   // delete handler (waits for server, then removes from UI)
   const postdeleted = async (item) => {
-  const id = item._id ?? item.id;
-  if (!id) return;
+    const id = item._id ?? item.id;
+    if (!id) return;
 
-  // SweetAlert Confirm
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Yes, delete it!",
-  });
+    // SweetAlert Confirm
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
 
-  // যদি ইউজার Yes চাপায়
-  if (result.isConfirmed) {
-    try {
-      await axios.delete(`http://localhost:5000/mycourses/${id}`);
+    
+    if (result.isConfirmed) {
+      try {
+        setDeletingId(id);
+        await axios.delete(`http://localhost:5000/mycourses/${id}`);
 
-      // UI থেকে item remove
-      setMyData((prev) => prev.filter((c) => (c._id ?? c.id) !== id));
+     
+        setMyData((prev) => prev.filter((c) => (c._id ?? c.id) !== id));
 
-      // Success Message
-      Swal.fire({
-        title: "Deleted!",
-        text: "Course has been deleted.",
-        icon: "success",
-        timer: 1800,
-      });
+        // Success Message
+        Swal.fire({
+          title: "Deleted!",
+          text: "Course has been deleted.",
+          icon: "success",
+          timer: 1800,
+        });
+      } catch (err) {
+        console.log(err);
 
-    } catch (err) {
-      console.log(err);
-
-      Swal.fire({
-        title: "Failed!",
-        text: "Could not delete. Check console.",
-        icon: "error",
-      });
+        Swal.fire({
+          title: "Failed!",
+          text: "Could not delete. Check console.",
+          icon: "error",
+        });
+      } finally {
+        setDeletingId(null);
+      }
     }
+  };
+
+
+  if (typeof user === "undefined") {
+    return (
+      <div className="p-4">
+        <p className="text-sm text-gray-500">Checking authentication...</p>
+      </div>
+    );
   }
-};
+
+
+  if (user === null) return null;
 
   return (
     <div className="p-4">

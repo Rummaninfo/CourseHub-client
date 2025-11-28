@@ -1,16 +1,26 @@
 "use client";
 
 import axios from "axios";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function AddCourse() {
   const { user, loading } = useContext(AuthContext);
+  const router = useRouter();
+
+ 
+  useEffect(() => {
+   
+    if (user === null) {
+      router.replace("/Register");
+    }
+  }, [user, router]);
 
   const addedCourse = async (ev) => {
     ev.preventDefault();
 
-    // যদি auth লোডিং চলছে বা user না থাকে, সাবমিট নিষ্ক্রিয় করুন
+   
     if (loading) {
       alert("Please wait...");
       return;
@@ -55,6 +65,20 @@ export default function AddCourse() {
     }
   };
 
+  
+  if (typeof user === "undefined") {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-black bg-gray-50 p-6">
+        <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
+          <p className="text-gray-600">Checking authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  
+  if (user === null) return null;
+
   return (
     <div className="min-h-screen flex items-center justify-center text-black bg-gray-50 p-6">
       <div className="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-8">
@@ -82,7 +106,7 @@ export default function AddCourse() {
         </div>
 
         <form onSubmit={addedCourse} className="space-y-6">
-          {/* ... আপনার ফর্ম ফিল্ডগুলো একই থাকবে ... */}
+      
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Course ID */}
             <div>
